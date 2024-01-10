@@ -1,0 +1,16 @@
+cht-user-management:
+  replicaCount: 1
+
+  service:
+    port: 3000
+
+  image:
+    repository: nginx
+
+  env:
+    CONFIG_NAME: changeme
+
+  envSecrets:
+    - env: COOKIE_PRIVATE_KEY
+      secretName: '{{ include "chtUserManagement.fullname" . }}'
+
