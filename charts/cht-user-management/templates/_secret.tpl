@@ -17,25 +17,13 @@ If release name contains chart name it will be used as a full name.
 {{- end }}
 
 {{/*
-Allow the release namespace to be overridden for multi-namespace deployments in combined charts
-*/}}
-{{- define "chtUserManagement.namespace" -}}
-{{- if .Values.namespaceOverride }}
-{{- .Values.namespaceOverride }}
-{{- else }}
-{{- .Release.Namespace }}
-{{- end }}
-{{- end }}
-
-{{/*
-Looks if there's an existing secret and reuse its password. If not it generates
-new password and use it.
+Looks if there is an existing secret and reuse its key. If not generate a new key and use it.
 */}}
 {{- define "chtUserManagement.COOKIE_PRIVATE_KEY" -}}
-{{- $secret := (lookup "v1" "Secret" (include "chtUserManagement.namespace" .) (include "chtUserManagement.fullname" .) ) }}
+{{- $secret := (lookup "v1" "Secret" (.Release.Namespace) (include "chtUserManagement.fullname" .) ) }}
 {{- if $secret }}
 {{- index $secret "data" "COOKIE_PRIVATE_KEY" }}
 {{- else }}
-{{- (randAlphaNum 40) | b64enc | quote }}
+{{- (randAlphaNum 45) | b64enc | quote }}
 {{- end }}
 {{- end }}

@@ -13,4 +13,3 @@ cht-user-management:
   envSecrets:
     - env: COOKIE_PRIVATE_KEY
       secretName: '{{ include "chtUserManagement.fullname" . }}'
-
