@@ -5,10 +5,10 @@ cht-user-management:
     port: 3000
 
   image:
-    repository: nginx
+    repository: public.ecr.aws/medic/cht-user-management
 
-  env:
-    CONFIG_NAME: changeme
+  # env:
+  #   CONFIG_NAME: changeme
 
   envSecrets:
     - env: COOKIE_PRIVATE_KEY
