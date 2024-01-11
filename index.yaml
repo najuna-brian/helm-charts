@@ -3,6 +3,16 @@ entries:
   base-single-app:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2024-01-11T13:09:19.000877156Z"
+    description: Single app helm chart to simplify configuration
+    digest: f32c051541fa75e99e3a6b9345895201823fde3bd04537d859de7d735733fe9e
+    name: base-single-app
+    type: application
+    urls:
+    - https://github.com/medic/helm-charts/releases/download/base-single-app-0.2.0/base-single-app-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2024-01-10T15:30:41.604423356Z"
     description: Single app helm chart to simplify configuration
     digest: ad9960f964b4f7d336524aabc8663bb2abc7c49b46d0a4db77eb8c139e44f0ef
@@ -12,6 +22,20 @@ entries:
     - https://github.com/medic/helm-charts/releases/download/base-single-app-0.1.0/base-single-app-0.1.0.tgz
     version: 0.1.0
   cht-user-management:
+  - apiVersion: v2
+    created: "2024-01-11T13:09:19.180112743Z"
+    dependencies:
+    - alias: cht-user-management
+      name: base-single-app
+      repository: file://../base-single-app
+      version: 0.2.0
+    description: Chart for https://github.com/medic/cht-user-management
+    digest: 50145c6083ed74b0cf790ba41f3081973bbee48acab8e6b8d7865cf7bfe3dc87
+    name: cht-user-management
+    type: application
+    urls:
+    - https://github.com/medic/helm-charts/releases/download/cht-user-management-0.2.0/cht-user-management-0.2.0.tgz
+    version: 0.2.0
   - apiVersion: v2
     appVersion: 1.16.0
     created: "2024-01-10T20:22:34.575672161Z"
@@ -42,4 +66,4 @@ entries:
     urls:
     - https://github.com/medic/helm-charts/releases/download/cht-user-management-0.1.1/cht-user-management-0.1.1.tgz
     version: 0.1.1
-generated: "2024-01-10T20:22:34.575680861Z"
+generated: "2024-01-11T13:09:19.180127143Z"
