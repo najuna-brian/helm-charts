@@ -1,6 +1,6 @@
 dependencies:
 - name: base-single-app
   repository: file://../base-single-app
-  version: 0.1.0
-digest: sha256:2ac33a2ac088a639e573b55e10760b3a0f35ea0dd56048c341bd24177056e125
-generated: "2024-01-10T12:46:58.732593+01:00"
+  version: 0.2.0
+digest: sha256:0a0341817c9308b919ddd591db8df326b60cee362ea584e9e87c1195e9ab200b
+generated: "2024-01-11T13:57:53.726465+01:00"

@@ -6,10 +6,14 @@ cht-user-management:
 
   image:
     repository: public.ecr.aws/medic/cht-user-management
+    tag: ""  # Set this to the version of the docker image
 
+  # Environment variablues to set in the pod, for example:
   # env:
   #   CONFIG_NAME: changeme
+  env: {}
 
   envSecrets:
+    # COOKIE_PRIVATE_KEY will be automatically generated if it doesn't exist
     - env: COOKIE_PRIVATE_KEY
       secretName: '{{ include "chtUserManagement.fullname" . }}'
