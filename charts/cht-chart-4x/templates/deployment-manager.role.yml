@@ -5,9 +5,17 @@ metadata:
 rules:
 - apiGroups:
   - apps
-  - ""
   resources:
   - deployments
+  verbs:
+  - get
+  - update
+  - watch
+  - patch
+  - list
+- apiGroups:
+  - ""
+  resources:
   - pods
   verbs:
   - get
