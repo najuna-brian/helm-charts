@@ -72,7 +72,7 @@ spec:
           volumeMounts:
             - mountPath: /opt/couchdb/data
               name: couchdb-claim0
-              subPath: data
+              subPath: storage/medic-core/couchdb/data
             - mountPath: /opt/couchdb/etc/local.d
               name: couchdb-claim0
               subPath: local.d

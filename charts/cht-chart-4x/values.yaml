@@ -1,7 +1,7 @@
-project_name: "<your-project-name>"
-namespace: "<your-namespace>" # e.g. "cht-dev-namespace"
-chtversion: 4.2.2
-# cht_image_tag: 4.1.1-4.1.1 #- This is filled in automatically by the deploy script. Don't uncomment this line.
+project_name: "<name>"
+namespace: "<namespace>" # e.g. "cht-dev-namespace"
+chtversion: 4.5.2
+cht_image_tag: 4.5.2 #- This is filled in automatically by the deploy script. Don't uncomment this line.
 
 # Don't change upstream-servers unless you know what you're doing.
 upstream_servers:
@@ -10,14 +10,14 @@ upstream_servers:
 
 # CouchDB Settings
 couchdb:
-  password: "<password-value>" # Avoid using non-url-safe characters in password
-  secret: "<secret-value>" # Any value, e.g. a UUID.
-  user: "<user-name>"
-  uuid: "<uuid-value>" # Any UUID
+  password: "<password>" # Avoid using non-url-safe characters in password
+  secret: "<secret>" # Any value, e.g. a UUID.
+  user: "medic"
+  uuid: "<uuid>" # Any UUID
   clusteredCouch_enabled: false
-  couchdb_node_storage_size: 100Mi
+  couchdb_node_storage_size: 50Gi
 clusteredCouch:
-  noOfCouchDBNodes: 3
+  noOfCouchDBNodes: 1
 toleration:   # This is for the couchdb pods. Don't change this unless you know what you're doing.
   key: "dev-couchdb-only"
   operator: "Equal"
@@ -27,12 +27,12 @@ ingress:
   annotations:
     groupname: "dev-cht-alb"
     tags: "Environment=dev,Team=QA"
-    certificate: "arn:aws:iam::<account-id>:server-certificate/2023-wildcard-dev-medicmobile-org-chain"
+    certificate: "arn:aws:iam::720541322708:server-certificate/2024-wildcard-dev-medicmobile-org-chain"
   # Ensure the host is not already taken. Valid characters for a subdomain are:
   #   a-z, 0-9, and - (but not as first or last character).
-  host: "<subdomain>.dev.medicmobile.org"
-  hosted_zone_id: "<the-hosted-zone-id>"
-  load_balancer: "dualstack.k8s-devchtalb-3eb0781cbb-694321496.eu-west-2.elb.amazonaws.com"
+  host: "<url>.dev.medicmobile.org"
+  #hosted_zone_id: "<the-hosted-zone-id>"
+  #load_balancer: "dualstack.k8s-devchtalb-3eb0781cbb-694321496.eu-west-2.elb.amazonaws.com"
 
 environment: "remote"  # "local", "remote"
 cluster_type: "eks" # "eks" or "k3s-k3d"
@@ -40,12 +40,14 @@ cert_source: "eks-medic" # "eks-medic" or "specify-file-path" or "my-ip-co"
 certificate_crt_file_path: "/path/to/certificate.crt" # Only required if cert_source is "specify-file-path"
 certificate_key_file_path: "/path/to/certificate.key" # Only required if cert_source is "specify-file-path"
 
-nodes:
+# there is a hasKey nodes that checks if an empty value exists here and then checks node-1. We need to remove those in couchdb deployments.
+# For now
+#nodes:
   # If using clustered couchdb, add the nodes here: node-1: name-of-first-node, node-2: name-of-second-node, etc.
   # Add equal number of nodes as specified in clusteredCouch.noOfCouchDBNodes
-  node-1: "gamma-cht-couchdb-1" # This is the name of the first node where couchdb will be deployed
-  node-2: "gamma-cht-couchdb-2" # This is the name of the second node where couchdb will be deployed
-  node-3: "gamma-cht-couchdb-3" # This is the name of the third node where couchdb will be deployed
+#  node-1: "gamma-cht-couchdb-1" # This is the name of the first node where couchdb will be deployed
+#  node-2: "gamma-cht-couchdb-2" # This is the name of the second node where couchdb will be deployed
+#  node-3: "gamma-cht-couchdb-3" # This is the name of the third node where couchdb will be deployed
   # For single couchdb node, use the following:
   # Leave it commented out if you don't know what it means.
   # Leave it commented out if you want to let kubernetes deploy this on any available node. (Recommended)
@@ -62,7 +64,7 @@ vSphere:
 #       Pre-existing data section
 # -----------------------------------------
 couchdb_data:
-  preExistingDataAvailable: "false" #If this is false, you don't have to fill in details in local_storage or remote.
+  preExistingDataAvailable: "true" #If this is false, you don't have to fill in details in local_storage or remote.
 
 # If preExistingDataAvailable is true, fill in the details below.
 # For local_storage, fill in the details if you are using k3s-k3d cluster type.
@@ -72,5 +74,5 @@ local_storage:  #If using k3s-k3d cluster type and you already have existing dat
   preExistingDiskPath-3: "/var/lib/couchdb3" #If node3 has pre-existing data.
 # For ebs storage when using eks cluster type, fill in the details below.
 ebs:
-  preExistingEBSVolumeID: "vol-0123456789abcdefg" # If you have already created the EBS volume, put the ID here.
-  preExistingEBSVolumeSize: "100Gi" # The size of the EBS volume.
+  preExistingEBSVolumeID: "<ebs_volume_id>" # If you have already created the EBS volume, put the ID here.
+  preExistingEBSVolumeSize: "50Gi" # The size of the EBS volume.

@@ -4,6 +4,7 @@ kind: PersistentVolume
 metadata:
   name: couchdb-pv-{{ .Values.namespace }}
 spec:
+  storageClassName: ebs-gp2
   capacity:
     storage: {{ .Values.ebs.preExistingEBSVolumeSize }}
   volumeMode: Filesystem
@@ -14,6 +15,6 @@ spec:
     driver: ebs.csi.aws.com
     volumeHandle: {{ .Values.ebs.preExistingEBSVolumeID }}
     fsType: ext4
-    volumeAttributes:
-      partition: "0"
+    #volumeAttributes:
+    #  partition: "0"
 {{- end }}

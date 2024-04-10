@@ -13,7 +13,7 @@ spec:
       storage: {{ .Values.couchdb.couchdb_node_storage_size }}
   {{- if eq (toString .Values.couchdb_data.preExistingDataAvailable) "true" }}
   volumeName: couchdb-pv-{{ .Values.namespace }}
-  storageClassName: ""
+  storageClassName: ebs-gp2
   {{- else }}
   storageClassName: ebs-gp2
   {{- end }}
