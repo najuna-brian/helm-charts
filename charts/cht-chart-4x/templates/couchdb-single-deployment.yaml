@@ -18,11 +18,10 @@ spec:
         cht.service: couchdb
     spec:
       tolerations:
-      - key: {{ .Values.toleration.key }}
-        operator: {{ .Values.toleration.operator }}
-        value: {{ .Values.toleration.value | quote }}
-        effect: {{ .Values.toleration.effect }}
-      # Check if .Values.nodes.single_node_deploy has a value
+        - key: {{ .Values.toleration.key }}
+          operator: {{ .Values.toleration.operator }}
+          value: {{ .Values.toleration.value | quote }}
+          effect: {{ .Values.toleration.effect }}
     {{- if hasKey .Values "nodes" }}
       {{- if hasKey .Values.nodes "single_node_deploy" }}
       nodeSelector:
