@@ -1,6 +1,6 @@
 dependencies:
 - name: base-single-app
-  repository: file://../base-single-app
+  repository: https://docs.communityhealthtoolkit.org/helm-charts
   version: 0.2.0
-digest: sha256:0a0341817c9308b919ddd591db8df326b60cee362ea584e9e87c1195e9ab200b
-generated: "2024-01-11T13:57:53.726465+01:00"
+digest: sha256:284a3dc5e9eb4c400a3abff6f49faa047ad11d2dbbc873e8adf8829cde321aae
+generated: "2024-04-10T11:32:50.118338+02:00"

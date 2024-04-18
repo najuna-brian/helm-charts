@@ -1,0 +1,9 @@
+# Chart dependencies
+/charts/*/charts
+
+# Editors
+.idea
+.vscode
+
+# OS
+.DS_Store
