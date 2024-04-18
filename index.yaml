@@ -24,6 +24,17 @@ entries:
   cht-chart-4x:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2024-04-18T16:15:23.985137035Z"
+    description: A Helm chart for Community Health Toolkit (CHT) v4
+    digest: d42ffa3f3760527a19b2cef504bcd728d1c3d1c3472728f04d7c109b530a0220
+    home: https://github.com/medic/cht-core
+    name: cht-chart-4x
+    type: application
+    urls:
+    - https://github.com/medic/helm-charts/releases/download/cht-chart-4x-0.2.3/cht-chart-4x-0.2.3.tgz
+    version: 0.2.3
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2024-04-18T16:14:33.871899401Z"
     description: A Helm chart for Community Health Toolkit (CHT) v4
     digest: 643ee185bbc689c75429bfb9f109969faca9eeed822aba7c4bc8dc4345b4c173
@@ -100,4 +111,4 @@ entries:
     urls:
     - https://github.com/medic/helm-charts/releases/download/cht-user-management-0.1.1/cht-user-management-0.1.1.tgz
     version: 0.1.1
-generated: "2024-04-18T16:14:33.871921783Z"
+generated: "2024-04-18T16:15:23.985182039Z"
