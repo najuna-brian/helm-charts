@@ -8,7 +8,7 @@ upstream_servers:
   docker_registry: "public.ecr.aws/medic"
   builds_url: "https://staging.dev.medicmobile.org/_couch/builds_4"
 upgrade_service:
-  tag: medicmobile/upgrade-service:0.32
+  tag: 0.32
 
 # CouchDB Settings
 couchdb:
