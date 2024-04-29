@@ -1,0 +1,175 @@
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ include "observability.fullname" . }}
+  annotations:
+    checksum/vector-config: {{ include (print $.Template.BasePath "/vector-configmap.yaml") . | sha256sum }}
+  labels:
+    {{- include "observability.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "observability.selectorLabels" . | nindent 6 }}
+  revisionHistoryLimit: 10
+  updateStrategy:
+    rollingUpdate:
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
+      labels:
+        {{- include "observability.selectorLabels" . | nindent 8 }}
+    spec:
+      automountServiceAccountToken: true
+      serviceAccountName: {{ include "observability.serviceAccountName" . }}
+      containers:
+        - name: node-exporter
+          image: quay.io/prometheus/node-exporter:v1.7.0
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            fsGroup: 65534
+            runAsGroup: 65534
+            runAsNonRoot: true
+            runAsUser: 65534
+          args:
+            - --path.procfs=/host/proc
+            - --path.sysfs=/host/sys
+            - --path.rootfs=/host/root
+            - --path.udev.data=/host/root/run/udev/data
+            - --web.listen-address=[$(HOST_IP)]:9100
+          securityContext:
+            readOnlyRootFilesystem: true
+          env:
+            - name: HOST_IP
+              # value: 127.0.0.1
+              value: 0.0.0.0
+          ports:
+            - name: metrics
+              containerPort: 9100
+              protocol: TCP
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              httpHeaders:
+              path: /
+              port: 9100
+              scheme: HTTP
+            initialDelaySeconds: 0
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              httpHeaders:
+              path: /
+              port: 9100
+              scheme: HTTP
+            initialDelaySeconds: 0
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          volumeMounts:
+            - name: procfs
+              mountPath: /host/proc
+              readOnly:  true
+            - name: sysfs
+              mountPath: /host/sys
+              readOnly: true
+            - name: root
+              mountPath: /host/root
+              mountPropagation: HostToContainer
+              readOnly: true
+        - name: vector
+          image: "timberio/vector:0.35.1-distroless-libc"
+          imagePullPolicy: IfNotPresent
+          args:
+            - --config-dir
+            - /etc/vector/
+          env:
+            - name: VECTOR_LOG
+              value: "info"
+            - name: VECTOR_SELF_NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: VECTOR_SELF_POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: VECTOR_SELF_POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: PROCFS_ROOT
+              value: "/host/proc"
+            - name: SYSFS_ROOT
+              value: "/host/sys"
+          ports:
+            - name: api
+              containerPort: 8686
+              protocol: TCP
+            - name: prom-exporter
+              containerPort: 9090
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: api
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: api
+          volumeMounts:
+            - name: vector-data
+              mountPath: "/vector-data-dir"
+            - name: vector-config
+              mountPath: "/etc/vector/"
+              readOnly: true
+            - mountPath: /var/log/
+              name: var-log
+              readOnly: true
+            - mountPath: /var/lib
+              name: var-lib
+              readOnly: true
+            - mountPath: /host/proc
+              name: procfs
+              readOnly: true
+            - mountPath: /host/sys
+              name: sysfs
+              readOnly: true
+      hostNetwork: false
+      hostPID: true
+      nodeSelector:
+        kubernetes.io/os: linux
+      tolerations:
+        - effect: NoSchedule
+          operator: Exists
+      terminationGracePeriodSeconds: 60
+      volumes:
+        - name: procfs
+          hostPath:
+            path: /proc
+        - name: sysfs
+          hostPath:
+            path: /sys
+        - name: root
+          hostPath:
+            path: /
+        - name: vector-config
+          projected:
+            sources:
+              - configMap:
+                  name: {{ include "observability.fullname" . }}-vector
+        - name: vector-data
+          hostPath:
+            path: "/var/lib/vector"
+        - name: var-log
+          hostPath:
+            path: /var/log/
+        - name: var-lib
+          hostPath:
+            path: /var/lib/

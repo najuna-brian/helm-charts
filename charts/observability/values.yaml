@@ -1,0 +1,248 @@
+
+service:
+  port: 9090
+  type: 'NodePort'
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  name: ""
+
+
+psp:
+  create: false
+
+
+#####################################################################
+nodeExporter:
+  enabled: true  # dashboards
+  operatingSystems:
+    linux:
+      enabled: true
+    darwin:
+      enabled: false
+
+
+#####################################################################
+grafana:
+  enabled: true
+  auth:
+    github:
+      enabled: false
+    google:
+      enabled: false
+  defaultDashboardsEnabled: true
+  defaultDashboardsEditable: false
+  adminUser: admin-2i7D9168pqiCsAiyvHSUc
+  sidecar:
+    dashboards:
+      enabled: true
+      label: grafana_dashboard
+      labelValue: medic-observability
+      multicluster:
+        global:
+          enabled: false # dashboards
+    datasources:
+      enabled: true
+      label: grafana_datasource
+      labelValue: medic-observability
+  extraSecretMounts:
+    - name: oauth-github
+      secretName: observability-grafana-oauth-github
+      defaultMode: 440
+      mountPath: /etc/secrets/auth/github
+      readOnly: true
+    - name: oauth-google
+      secretName: observability-grafana-oauth-google
+      defaultMode: 440
+      mountPath: /etc/secrets/auth/google
+      readOnly: true
+  ingress:
+    enabled: false
+
+
+#####################################################################
+loki:
+  enabled: true
+  loki:
+    auth_enabled: false
+    schemaConfig:
+      configs:
+        - from: "2023-01-01"
+          index:
+            period: 24h
+            prefix: index_
+          object_store: s3
+          schema: v12
+          store: tsdb
+    storage:
+      bucketNames:
+        chunks: ""
+        ruler: ""
+        admin: ""
+      type: s3
+      s3:
+        # region: eu-west-2
+        secretAccessKey: null
+        accessKeyId: null
+        signatureVersion: null
+        s3ForcePathStyle: false
+        insecure: false
+        http_config: {}
+    limits_config:
+      retention_period: 168h
+    compactor:
+      # working_directory: /data/retention
+      compaction_interval: 10m
+      retention_enabled: true
+      retention_delete_delay: 2h
+      retention_delete_worker_count: 150
+      delete_request_store: s3
+
+
+    # chunk_store_config:
+    #   max_look_back_period: 672h
+
+  write:
+    replicas: 2
+
+  read:
+    replicas: 1
+
+  # serviceAccount:
+  #   annotations:
+  #     eks.amazonaws.com/role-arn: "arn:aws:iam::<path to role>"
+
+  monitoring:
+    dashboards:
+      labels:
+        grafana_dashboard: medic-observability
+
+
+#####################################################################
+opencost:
+  enabled: true
+  opencost:
+    prometheus:
+      internal:
+        serviceName: '{{ include "observability.prometheus.fullname" . }}'
+        namespaceName: '{{ include "observability.namespace" . }}'
+    ui:
+      enabled: true
+
+
+#####################################################################
+prometheus:
+  prometheusSpec:
+    scrapeInterval: false
+  enabled: true
+  alertmanager:
+    enabled: false
+  kube-state-metrics:
+    enabled: true
+  prometheus-node-exporter:
+    enabled: false
+  prometheus-pushgateway:
+    enabled: false
+  server:
+    extraFlags:
+      - web.enable-remote-write-receiver
+      - web.enable-lifecycle
+  extraScrapeConfigs: |
+    - job_name: 'kube-state-metrics'
+      metrics_path: /metrics
+      static_configs:
+        - targets:
+          - "{{ include "observability.kube-state-metrics.fullname" . }}:8080"
+    - job_name: opencost
+      honor_labels: true
+      scrape_interval: 1m
+      scrape_timeout: 10s
+      metrics_path: /metrics
+      scheme: http
+      dns_sd_configs:
+      - names:
+        - {{ include "observability.opencost.fullname" . }}
+        type: 'A'
+        port: 9003
+
+
+#####################################################################
+vector:
+  customConfig:
+    api:
+      address: 0.0.0.0:8686
+      enabled: true
+      playground: false
+    data_dir: /vector-data-dir
+    sinks:
+      loki_forward:
+        encoding:
+          codec: json
+        endpoint: http://loki-write:3100
+        inputs:
+          - kubernetes_logs
+        labels:
+          provider: medic
+          namespace: '{{ print "{{ .kubernetes.pod_namespace }}" }}'
+          container: '{{ print "{{ .kubernetes.container_name }}" }}'
+          pod: '{{ print "{{ .kubernetes.pod_name }}" }}'
+        type: loki
+      prom_write:
+        endpoint: 'http://{{ include "observability.prometheus.fullname" . }}/api/v1/write'
+        type: prometheus_remote_write
+        inputs:
+          - internal_metrics
+          - node_exporter_remapped
+    sources:
+      host_metrics:
+        filesystem:
+          devices:
+            excludes:
+              - binfmt_misc
+          filesystems:
+            excludes:
+              - binfmt_misc
+          mountPoints:
+            excludes:
+              - '*/proc/sys/fs/binfmt_misc'
+        type: host_metrics
+      internal_metrics:
+        type: internal_metrics
+      kubernetes_logs:
+        type: kubernetes_logs
+      node_exporter:
+        type: prometheus_scrape
+        endpoints:
+          - http://localhost:9100/metrics
+    transforms:
+      node_exporter_remapped:
+        type: remap
+        inputs:
+          - node_exporter
+        source: |-
+          .tags.job = "node-exporter"
+          .tags.instance = "${HOSTNAME}"
+
+
+#####################################################################
+# Dashboards
+#####################################################################
+coreDns:
+  enabled: false
+kubeEtcd:
+  enabled: false
+kubeControllerManager:
+  enabled: false
+kubeApiServer:
+  enabled: false
+kubelet:
+  enabled: false
+windowsMonitoring:
+  enabled: false
+kubeScheduler:
+  enabled: false
+kubeProxy:
+  enabled: false
