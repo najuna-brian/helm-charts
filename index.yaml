@@ -149,4 +149,33 @@ entries:
     urls:
     - https://github.com/medic/helm-charts/releases/download/cht-user-management-0.1.1/cht-user-management-0.1.1.tgz
     version: 0.1.1
-generated: "2024-04-29T07:23:40.640826479Z"
+  observability:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2024-04-29T08:01:27.819864337Z"
+    dependencies:
+    - condition: grafana.enabled
+      name: grafana
+      repository: https://grafana.github.io/helm-charts
+      version: 7.3.*
+    - condition: loki.enabled
+      name: loki
+      repository: https://grafana.github.io/helm-charts
+      version: 5.36.*
+    - condition: opencost.enabled
+      name: opencost
+      repository: https://opencost.github.io/opencost-helm-chart
+      version: 1.33.*
+    - condition: prometheus.enabled
+      name: prometheus
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 25.19.*
+    description: A Helm chart for medic observability
+    digest: 9f1a971b942b40980984a2a2160c14dd0d0f2fd0d516f5e657354ae5457c0e08
+    home: https://github.com/medic/helm-charts/tree/main/charts/observability
+    name: observability
+    type: application
+    urls:
+    - https://github.com/medic/helm-charts/releases/download/observability-0.1.2/observability-0.1.2.tgz
+    version: 0.1.2
+generated: "2024-04-29T08:01:27.819888212Z"
