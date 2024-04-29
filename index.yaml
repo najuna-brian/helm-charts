@@ -2,6 +2,17 @@ apiVersion: v1
 entries:
   base-single-app:
   - apiVersion: v2
+    created: "2024-04-29T07:23:40.345521057Z"
+    description: Single app helm chart to simplify configuration
+    digest: f880ac8fdecd8a0e245c883eed9ab285baaf28e4881b332ac7ac1506b081fa0b
+    home: https://github.com/medic/helm-charts/tree/gh-pages
+    icon: https://avatars.githubusercontent.com/u/474424?s=200&v=4
+    name: base-single-app
+    type: library
+    urls:
+    - https://github.com/medic/helm-charts/releases/download/base-single-app-0.2.1/base-single-app-0.2.1.tgz
+    version: 0.2.1
+  - apiVersion: v2
     appVersion: 1.16.0
     created: "2024-01-11T13:09:19.000877156Z"
     description: Single app helm chart to simplify configuration
@@ -22,6 +33,17 @@ entries:
     - https://github.com/medic/helm-charts/releases/download/base-single-app-0.1.0/base-single-app-0.1.0.tgz
     version: 0.1.0
   cht-chart-4x:
+  - apiVersion: v2
+    created: "2024-04-29T07:23:40.470139373Z"
+    description: A Helm chart for Community Health Toolkit (CHT) v4
+    digest: 2677670046d3838792b7d4551a78f2f4084ee64cb98b742b1d9bd6c6b1b82e99
+    home: https://github.com/medic/cht-core
+    icon: https://avatars.githubusercontent.com/u/474424?s=200&v=4
+    name: cht-chart-4x
+    type: application
+    urls:
+    - https://github.com/medic/helm-charts/releases/download/cht-chart-4x-1.0.0/cht-chart-4x-1.0.0.tgz
+    version: 1.0.0
   - apiVersion: v2
     appVersion: 1.16.0
     created: "2024-04-18T16:15:23.985137035Z"
@@ -68,6 +90,22 @@ entries:
     version: 0.2.0
   cht-user-management:
   - apiVersion: v2
+    created: "2024-04-29T07:23:40.640778549Z"
+    dependencies:
+    - alias: cht-user-management
+      name: base-single-app
+      repository: https://docs.communityhealthtoolkit.org/helm-charts
+      version: 0.2.0
+    description: Chart for cht-user-management
+    digest: a11e68885bdbb3e0f7c89eaa643796692d6e9eaff483795c60b37f1e1053a755
+    home: https://github.com/medic/cht-user-management
+    icon: https://avatars.githubusercontent.com/u/474424?s=200&v=4
+    name: cht-user-management
+    type: application
+    urls:
+    - https://github.com/medic/helm-charts/releases/download/cht-user-management-0.2.1/cht-user-management-0.2.1.tgz
+    version: 0.2.1
+  - apiVersion: v2
     created: "2024-01-11T13:09:19.180112743Z"
     dependencies:
     - alias: cht-user-management
@@ -111,4 +149,4 @@ entries:
     urls:
     - https://github.com/medic/helm-charts/releases/download/cht-user-management-0.1.1/cht-user-management-0.1.1.tgz
     version: 0.1.1
-generated: "2024-04-18T16:15:23.985182039Z"
+generated: "2024-04-29T07:23:40.640826479Z"
