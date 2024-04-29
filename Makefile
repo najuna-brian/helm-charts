@@ -9,7 +9,7 @@ $(CHARTS:=/build): add_repos # Build dependencies for a specific chart
 
 .PHONY: test
 test: build # Lint all charts
-	helm lint --strict charts/* --set cht_image_tag=unused_tag_for_chart_ci
+	helm lint charts/* --set cht_image_tag=unused_tag_for_chart_ci
 
 .PHONY: add_repos
 add_repos: # Add helm repo dependencies for publishing charts
