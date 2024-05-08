@@ -1,5 +1,5 @@
 {{- if .Values.opencost.enabled }}
-{{- $files := .Files.Glob "dashboards/opencost/*.json" }}
+{{- $files := .Files.Glob "dashboards/thirdparty/*.json" }}
 {{- if $files }}
 apiVersion: v1
 kind: ConfigMapList
@@ -9,7 +9,7 @@ items:
 - apiVersion: v1
   kind: ConfigMap
   metadata:
-    name: {{ printf "%s-dashboard-opencost-%s" (include "observability.fullname" $) $dashboardName | trunc 63 | trimSuffix "-" }}
+    name: {{ printf "%s-dashboard-thirdparty-%s" (include "observability.fullname" $) $dashboardName | trunc 63 | trimSuffix "-" }}
     namespace: {{ $.Release.Namespace }}
     labels:
       grafana_dashboard: medic-observability
