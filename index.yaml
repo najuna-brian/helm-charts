@@ -151,6 +151,34 @@ entries:
     version: 0.1.1
   observability:
   - apiVersion: v2
+    created: "2024-05-17T10:04:20.071100361Z"
+    dependencies:
+    - condition: grafana.enabled
+      name: grafana
+      repository: https://grafana.github.io/helm-charts
+      version: 7.3.*
+    - condition: loki.enabled
+      name: loki
+      repository: https://grafana.github.io/helm-charts
+      version: 5.36.*
+    - condition: opencost.enabled
+      name: opencost
+      repository: https://opencost.github.io/opencost-helm-chart
+      version: 1.33.*
+    - condition: prometheus.enabled
+      name: prometheus
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 25.19.*
+    description: A Helm chart for medic observability
+    digest: a2870c0ec6df6ec38419dfd5b61bdcc3425bbf428d31b773b2630c7a2b3fdba2
+    home: https://github.com/medic/helm-charts/tree/main/charts/observability
+    icon: https://avatars.githubusercontent.com/u/474424?s=200&v=4
+    name: observability
+    type: application
+    urls:
+    - https://github.com/medic/helm-charts/releases/download/observability-0.1.5/observability-0.1.5.tgz
+    version: 0.1.5
+  - apiVersion: v2
     created: "2024-05-08T08:15:38.476891938Z"
     dependencies:
     - condition: grafana.enabled
@@ -234,4 +262,4 @@ entries:
     urls:
     - https://github.com/medic/helm-charts/releases/download/observability-0.1.2/observability-0.1.2.tgz
     version: 0.1.2
-generated: "2024-05-08T08:15:38.476913429Z"
+generated: "2024-05-17T10:04:20.071144344Z"
