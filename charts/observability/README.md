@@ -1,13 +1,52 @@
 # Medic Observability
 
 ## Chart
+```mermaid
+flowchart LR
+  subgraph Daemonset
+    node-exporter-- metrics -->Vector{Vector}
+  end
+  Logs-. logs .->Vector
+  Opencost<-->Prometheus
+  Prometheus<-->Prometheus_PVC[(PVC)]
+  Vector-- metrics -->Prometheus
+  Vector-. audit logs .->plaintext_logs[(Plaintext\nS3 storage)]
+  Prometheus-->Grafana
+  Vector-. logs .->loki-gateway
+  cht-core== tracing ==>tempo-distributor
+  tempo-query-frontend==>Grafana
+  loki-gateway-.->Grafana
+  loki-canary-- metrics -->Prometheus
+  subgraph Loki
+    loki-backend
+    loki-canary<-.->loki-gateway
+    loki-gateway-.->loki-write
+    loki-logs
+    Loki_S3-.->loki-read
+    loki-read-.->loki-gateway
+    loki-write-.->Loki_S3[(Loki S3)]
+  end
+  subgraph Tempo
+    tempo-compactor<==>Tempo_S3[(Tempo S3)]
+    tempo-distributor==>tempo-ingester
+    tempo-ingester==>Tempo_S3
+    tempo-memcached
+    Tempo_S3==>tempo-querier
+    tempo-querier==>tempo-query-frontend
+  end
+  subgraph KubeCost
+    kubecost-prometheus-server<-->kubecost-forecast
+    kubecost-prometheus-server<-->kubecost-cost-analyzer
+  end
 ```
-┌─Map────────┐
+### Simplified ASCII chart
+```
+┌─Legend─────┐
 │            │
 │ ─▶ Metrics │
 │            │
 │ ═▷ Logs    │                 ┌────────┐
-│            │                 │Opencost│
+│            │                 │OpenCost│
 └────────────┘                 └──▲┬────┘
                               ┌───┴▼─────┐
                          ┌────▶Prometheus├───┐
