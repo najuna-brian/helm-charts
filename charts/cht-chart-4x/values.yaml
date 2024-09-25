@@ -1,6 +1,6 @@
 project_name: "<your-project-name>"
 namespace: "<your-namespace>" # e.g. "cht-dev-namespace"
-chtversion: 4.6.0
+chtversion: 4.10.0
 # cht_image_tag: 4.1.1-4.1.1 #- This is filled in automatically by the deploy script. Don't uncomment this line.
 
 # Don't change upstream-servers unless you know what you're doing.
@@ -65,6 +65,10 @@ vSphere:
 # -----------------------------------------
 couchdb_data:
   preExistingDataAvailable: "false" #If this is false, you don't have to fill in details in local_storage or remote.
+  dataPathOnDiskForCouchDB: "data" # This is the path where couchdb data will be stored. Leave it as data if you don't have pre-existing data.
+    # To mount to a specific subpath (If data is from an old 3.x instance for example): dataPathOnDiskForCouchDB: "storage/medic-core/couchdb/data"
+    # To mount to the root of the volume: dataPathOnDiskForCouchDB: ""
+    # To use the default "data" subpath, remove the subPath line entirely from values.yaml or name it "data" or use null.
 
 # If preExistingDataAvailable is true, fill in the details below.
 # For local_storage, fill in the details if you are using k3s-k3d cluster type.
@@ -74,5 +78,7 @@ local_storage:  #If using k3s-k3d cluster type and you already have existing dat
   preExistingDiskPath-3: "/var/lib/couchdb3" #If node3 has pre-existing data.
 # For ebs storage when using eks cluster type, fill in the details below.
 ebs:
-  preExistingEBSVolumeID: "vol-0123456789abcdefg" # If you have already created the EBS volume, put the ID here.
+  preExistingEBSVolumeID-1: "vol-0123456789abcdefg" # If you have already created the EBS volume, put the ID here.
+  preExistingEBSVolumeID-2: "vol-0123456789abcdefg" # If you have already created the EBS volume, put the ID here.
+  preExistingEBSVolumeID-3: "vol-0123456789abcdefg" # If you have already created the EBS volume, put the ID here.
   preExistingEBSVolumeSize: "100Gi" # The size of the EBS volume.

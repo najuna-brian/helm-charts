@@ -12,7 +12,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   csi:
     driver: ebs.csi.aws.com
-    volumeHandle: {{ .Values.ebs.preExistingEBSVolumeID }}
+    volumeHandle: {{ index .Values.ebs "preExistingEBSVolumeID-1" }}
     fsType: ext4
     volumeAttributes:
       partition: "0"
