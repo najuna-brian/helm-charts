@@ -84,9 +84,17 @@ spec:
         volumeMounts:
         - mountPath: /opt/couchdb/data
           name: couchdb-{{ $nodeNumber }}-claim0
-          {{- if ne .Values.couchdb_data.dataPathOnDiskForCouchDB "" }}
-          subPath: {{ .Values.couchdb_data.dataPathOnDiskForCouchDB }}
+          {{- if $.Values.couchdb_data.dataPathOnDiskForCouchDB }}
+          subPath: {{ if contains "%d" $.Values.couchdb_data.dataPathOnDiskForCouchDB }}
+                    {{- printf $.Values.couchdb_data.dataPathOnDiskForCouchDB $nodeNumber }}
+                    {{- else }}
+                    {{- $.Values.couchdb_data.dataPathOnDiskForCouchDB }}
+                    {{- end }}
           {{- end }}
+          # You can use %d for each node to be substituted with the node number.
+          # If %d doesn't exist, the same path will be used for all nodes.
+          # example: test-path%d will be test-path1, test-path2, test-path3 for 3 nodes.
+          # example: test-path will be test-path for all nodes.
         - mountPath: /opt/couchdb/etc/local.d
           name: couchdb-{{ $nodeNumber }}-claim0
           subPath: local.d

@@ -15,5 +15,5 @@ spec:
     volumeHandle: {{ index .Values.ebs "preExistingEBSVolumeID-1" }}
     fsType: ext4
     volumeAttributes:
-      partition: "0"
+      partition: "{{ .Values.couchdb_data.partition | default "0" }}"
 {{- end }}

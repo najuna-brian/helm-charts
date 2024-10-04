@@ -69,6 +69,12 @@ couchdb_data:
     # To mount to a specific subpath (If data is from an old 3.x instance for example): dataPathOnDiskForCouchDB: "storage/medic-core/couchdb/data"
     # To mount to the root of the volume: dataPathOnDiskForCouchDB: ""
     # To use the default "data" subpath, remove the subPath line entirely from values.yaml or name it "data" or use null.
+    # for Multi-node configuration, you can use %d to substitute with the node number.
+    # You can use %d for each node to be substituted with the node number.
+    # If %d doesn't exist, the same path will be used for all nodes.
+    # example: test-path%d will be test-path1, test-path2, test-path3 for 3 nodes.
+    # example: test-path will be test-path for all nodes.
+  partition: "0" # This is the partition number for the EBS volume. Leave it as 0 if you don't have a partitioned disk.
 
 # If preExistingDataAvailable is true, fill in the details below.
 # For local_storage, fill in the details if you are using k3s-k3d cluster type.
