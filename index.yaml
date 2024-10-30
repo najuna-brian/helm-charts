@@ -2,6 +2,17 @@ apiVersion: v1
 entries:
   base-single-app:
   - apiVersion: v2
+    created: "2024-10-30T17:27:39.995380849Z"
+    description: Single app helm chart to simplify configuration
+    digest: 8e184e17febdc15cacc1b1b2184228746f289a1993c61831810083e582f6d9b5
+    home: https://github.com/medic/helm-charts/tree/gh-pages
+    icon: https://avatars.githubusercontent.com/u/474424?s=200&v=4
+    name: base-single-app
+    type: application
+    urls:
+    - https://github.com/medic/helm-charts/releases/download/base-single-app-0.2.2/base-single-app-0.2.2.tgz
+    version: 0.2.2
+  - apiVersion: v2
     created: "2024-04-29T07:23:40.345521057Z"
     description: Single app helm chart to simplify configuration
     digest: f880ac8fdecd8a0e245c883eed9ab285baaf28e4881b332ac7ac1506b081fa0b
@@ -122,6 +133,30 @@ entries:
     - https://github.com/medic/helm-charts/releases/download/cht-chart-4x-0.2.0/cht-chart-4x-0.2.0.tgz
     version: 0.2.0
   cht-user-management:
+  - apiVersion: v2
+    created: "2024-10-30T17:27:40.193073332Z"
+    dependencies:
+    - alias: cht-user-management
+      name: base-single-app
+      repository: https://docs.communityhealthtoolkit.org/helm-charts
+      version: 0.2.1
+    - alias: cht-user-management-worker
+      name: base-single-app
+      repository: https://docs.communityhealthtoolkit.org/helm-charts
+      version: 0.2.1
+    - alias: redis
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 16.13.2
+    description: Chart for cht-user-management
+    digest: 8eab324f1eb21ae93ca2be5c7c1e6d5c25221d43ba0fa8a4f86fd42d00411fec
+    home: https://github.com/medic/cht-user-management
+    icon: https://avatars.githubusercontent.com/u/474424?s=200&v=4
+    name: cht-user-management
+    type: application
+    urls:
+    - https://github.com/medic/helm-charts/releases/download/cht-user-management-0.2.2/cht-user-management-0.2.2.tgz
+    version: 0.2.2
   - apiVersion: v2
     created: "2024-04-29T07:23:40.640778549Z"
     dependencies:
@@ -351,4 +386,4 @@ entries:
     urls:
     - https://github.com/medic/helm-charts/releases/download/observability-0.1.2/observability-0.1.2.tgz
     version: 0.1.2
-generated: "2024-10-04T08:57:13.104479689Z"
+generated: "2024-10-30T17:27:40.193124548Z"
