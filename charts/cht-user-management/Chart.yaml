@@ -11,13 +11,13 @@ version: 0.2.2
 dependencies:
   - alias: cht-user-management
     name: base-single-app
-    version: "0.2.2"
+    version: "0.2.1"
     #repository: file://../base-single-app
     repository: https://docs.communityhealthtoolkit.org/helm-charts
 
   - alias: cht-user-management-worker
     name: base-single-app
-    version: "0.2.2"
+    version: "0.2.1"
     repository: https://docs.communityhealthtoolkit.org/helm-charts
     #repository: file://../base-single-app
 

@@ -17,3 +17,4 @@ add_repos: # Add helm repo dependencies for publishing charts
 	helm repo add medic                  https://docs.communityhealthtoolkit.org/helm-charts
 	helm repo add opencost               https://opencost.github.io/opencost-helm-chart
 	helm repo add prometheus-community   https://prometheus-community.github.io/helm-charts
+	helm repo add bitnami                https://charts.bitnami.com/bitnami
