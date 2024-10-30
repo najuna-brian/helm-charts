@@ -1,19 +1,75 @@
 cht-user-management:
   replicaCount: 1
-
   service:
     port: 3000
-
+    enabled: true
   image:
     repository: public.ecr.aws/medic/cht-user-management
-    tag: ""  # Set this to the version of the docker image
+    tag: "1.4.1"  # Set this to the version of the docker image
 
   # Environment variablues to set in the pod, for example:
   # env:
   #   CONFIG_NAME: changeme
-  env: {}
-
+  #   REDIS_HOST: {{ Release.Name }}-redis-master.{{ .Release.Namespace }}.svc.cluster.local
+  env: 
+    NODE_ENV: dev
+    CHT_DEV_HTTP: false
+    CHT_DEV_URL_PORT: hareet-test.dev.medicmobile.org
+    CONFIG_NAME: chis-tg
+    REDIS_HOST: test-user-management-redis-master.hareet-test.svc.cluster.local
+    REDIS_PORT: 6379
   envSecrets:
-    # COOKIE_PRIVATE_KEY will be automatically generated if it doesn't exist
+    # COOKIE/WORKER_PRIVATE_KEY will be automatically generated if it doesn't exist
     - env: COOKIE_PRIVATE_KEY
-      secretName: '{{ include "chtUserManagement.fullname" . }}'
+      secretName: "{{ .Release.Name }}-cht-user-management"
+    - env: WORKER_PRIVATE_KEY
+      secretName: "{{ .Release.Name }}-cht-user-management"
+  
+  ingress:
+    annotations:
+      alb.ingress.kubernetes.io/certificate-arn: arn:aws:iam::720541322708:server-certificate/2024-wildcard-dev-medicmobile-org-chain
+      alb.ingress.kubernetes.io/group.name: dev-cht-alb
+      alb.ingress.kubernetes.io/healthcheck-port: traffic-port
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+      alb.ingress.kubernetes.io/scheme: internet-facing
+      alb.ingress.kubernetes.io/ssl-redirect: "443"
+      alb.ingress.kubernetes.io/tags: Environment=dev,Team=QA
+      alb.ingress.kubernetes.io/target-type: ip
+    className: alb
+    enabled: true
+    hosts:
+    - host: hareet-test-users.dev.medicmobile.org
+      paths:
+      - path: /
+        pathType: Prefix
+
+
+cht-user-management-worker:
+  # Our worker does not need any ports exposed, services, healtchecks, so we toggle this to false
+  # to prevent single-base-app from templating and creating those resources
+  service:
+    enabled: false
+  replicaCount: 1
+  image:
+    repository: public.ecr.aws/medic/cht-user-management-worker
+    tag: "1.4.1"
+  env: 
+    NODE_ENV: dev
+    REDIS_HOST: test-user-management-redis-master.hareet-test.svc.cluster.local
+    REDIS_PORT: 6379
+  envSecrets:
+    - env: WORKER_PRIVATE_KEY
+      secretName: "{{ .Release.Name }}-cht-user-management"
+
+
+redis:
+  architecture: standalone
+  replica:
+    replicaCount: 1
+  persistence:
+    enabled: true
+    storageClass: ebs-gp2
+    size: 8Gi
+  auth:
+    enabled: false
+    

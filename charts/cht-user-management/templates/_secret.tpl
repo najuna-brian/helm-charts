@@ -17,12 +17,21 @@ If release name contains chart name it will be used as a full name.
 {{- end }}
 
 {{/*
-Looks if there is an existing secret and reuse its key. If not generate a new key and use it.
+Looks if there is existing secrets and reuse their keys. If not generate new keys and use them.
 */}}
 {{- define "chtUserManagement.COOKIE_PRIVATE_KEY" -}}
 {{- $secret := (lookup "v1" "Secret" (.Release.Namespace) (include "chtUserManagement.fullname" .) ) }}
 {{- if $secret }}
 {{- index $secret "data" "COOKIE_PRIVATE_KEY" }}
+{{- else }}
+{{- (randAlphaNum 45) | b64enc | quote }}
+{{- end }}
+{{- end }}
+
+{{- define "chtUserManagement.WORKER_PRIVATE_KEY" -}}
+{{- $secret := (lookup "v1" "Secret" (.Release.Namespace) (include "chtUserManagement.fullname" .) ) }}
+{{- if $secret }}
+{{- index $secret "data" "WORKER_PRIVATE_KEY" }}
 {{- else }}
 {{- (randAlphaNum 45) | b64enc | quote }}
 {{- end }}

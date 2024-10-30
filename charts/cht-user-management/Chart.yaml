@@ -6,13 +6,24 @@ icon: https://avatars.githubusercontent.com/u/474424?s=200&v=4
 
 type: application
 
-version: 0.2.1
+version: 0.2.2
 
 dependencies:
   - alias: cht-user-management
     name: base-single-app
-    version: "0.2.0"
+    version: "0.2.2"
+    #repository: file://../base-single-app
     repository: https://docs.communityhealthtoolkit.org/helm-charts
-    # repository: file://../base-single-app
+
+  - alias: cht-user-management-worker
+    name: base-single-app
+    version: "0.2.2"
+    repository: https://docs.communityhealthtoolkit.org/helm-charts
+    #repository: file://../base-single-app
+
+  - alias: redis
+    name: redis
+    version: "16.13.2"
+    repository: https://charts.bitnami.com/bitnami
 
 appVersion: ""
