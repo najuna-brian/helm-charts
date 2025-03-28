@@ -1,5 +1,5 @@
-project_name: "<your-project-name>" # e.g. mrjones-dev
-namespace: "<your-namespace>" # e.g. "mrjones-dev"
+project_name: "cht-najuna-dev" # e.g. mrjones-dev
+namespace: "najuna-cht" # e.g. "mrjones-dev"
 chtversion: 4.10.0
 # cht_image_tag: 4.1.1-4.1.1 #- This is filled in automatically by the deploy script. Don't uncomment this line.
 
@@ -17,15 +17,15 @@ upgrade_service:
 
 # CouchDB Settings
 couchdb:
-  password: "<password-value>" # Avoid using non-url-safe characters in password
-  secret: "f9053a0a-ef77-4be3-994d-87d6732600fd" # for prod, change to output of `uuidgen
+  password: "Yesme80!" # Avoid using non-url-safe characters in password
+  secret: "7e115143-d8c6-48c9-a08c-5cbe9f80798e" # for prod, change to output of `uuidgen
   user: "medic"
-  uuid: "7300115e-1a98-4607-a37c-50e0c9913767" # for prod, change to output of `uuidgen`
+  uuid: "79e826d1-82f6-40e1-b6a0-5c28bc006e1b" # for prod, change to output of `uuidgen`
   clusteredCouch_enabled: false
   couchdb_node_storage_size: 100Mi
 clusteredCouch:
   noOfCouchDBNodes: 3
-toleration:   # This is for the couchdb pods. Don't change this unless you know what you're doing.
+toleration: # This is for the couchdb pods. Don't change this unless you know what you're doing.
   key: "dev-couchdb-only"
   operator: "Equal"
   value: "true"
@@ -37,13 +37,13 @@ ingress:
     certificate: "arn:aws:iam::720541322708:server-certificate/2024-wildcard-dev-medicmobile-org-chain"
   # Ensure the host is not already taken. Valid characters for a subdomain are:
   #   a-z, 0-9, and - (but not as first or last character).
-  host: "<subdomain>.dev.medicmobile.org"  # e.g. "mrjones.dev.medicmobile.org"
+  host: "localcht.deployment" # e.g. "mrjones.dev.medicmobile.org"
   hosted_zone_id: "Z3304WUAJTCM7P"
   load_balancer: "dualstack.k8s-devchtalb-3eb0781cbb-694321496.eu-west-2.elb.amazonaws.com"
 
-environment: "remote"  # "local", "remote"
-cluster_type: "eks" # "eks" or "k3s-k3d"
-cert_source: "eks-medic" # "eks-medic" or "specify-file-path" or "my-ip-co"
+environment: "local" # "local", "remote"
+cluster_type: "k3s-k3d" # "eks" or "k3s-k3d"
+cert_source: "my-ip-co" # "eks-medic" or "specify-file-path" or "my-ip-co"
 certificate_crt_file_path: "/path/to/certificate.crt" # Only required if cert_source is "specify-file-path"
 certificate_key_file_path: "/path/to/certificate.key" # Only required if cert_source is "specify-file-path"
 
@@ -56,21 +56,22 @@ nodes:
   # For single couchdb node, use the following:
   # Leave it commented out if you don't know what it means.
   # Leave it commented out if you want to let kubernetes deploy this on any available node. (Recommended)
-  # single_node_deploy: "gamma-cht-node" # This is the name of the node where all components will be deployed - for non-clustered configuration. 
+  # single_node_deploy: "gamma-cht-node" # This is the name of the node where all components will be deployed - for non-clustered configuration.
 
 # Applicable only if using k3s
 k3s_use_vSphere_storage_class: "false" # "true" or "false"
 # vSphere specific configurations. If you set "true" for k3s_use_vSphere_storage_class, fill in the details below.
 vSphere:
-  datastoreName: "DatastoreName"  # Replace with your datastore name
-  diskPath: "path/to/disk"         # Replace with your disk path
+  datastoreName: "DatastoreName" # Replace with your datastore name
+  diskPath: "path/to/disk" # Replace with your disk path
 
 # -----------------------------------------
 #       Pre-existing data section
 # -----------------------------------------
 couchdb_data:
   preExistingDataAvailable: "false" #If this is false, you don't have to fill in details in local_storage or remote.
-  dataPathOnDiskForCouchDB: "data" # This is the path where couchdb data will be stored. Leave it as data if you don't have pre-existing data.
+  dataPathOnDiskForCouchDB:
+    "data" # This is the path where couchdb data will be stored. Leave it as data if you don't have pre-existing data.
     # To mount to a specific subpath (If data is from an old 3.x instance for example): dataPathOnDiskForCouchDB: "storage/medic-core/couchdb/data"
     # To mount to the root of the volume: dataPathOnDiskForCouchDB: ""
     # To use the default "data" subpath, remove the subPath line entirely from values.yaml or name it "data" or use null.
@@ -83,7 +84,7 @@ couchdb_data:
 
 # If preExistingDataAvailable is true, fill in the details below.
 # For local_storage, fill in the details if you are using k3s-k3d cluster type.
-local_storage:  #If using k3s-k3d cluster type and you already have existing data.
+local_storage: #If using k3s-k3d cluster type and you already have existing data.
   preExistingDiskPath-1: "/var/lib/couchdb1" #If node1 has pre-existing data.
   preExistingDiskPath-2: "/var/lib/couchdb2" #If node2 has pre-existing data.
   preExistingDiskPath-3: "/var/lib/couchdb3" #If node3 has pre-existing data.
